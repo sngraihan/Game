@@ -355,10 +355,9 @@ void play(){
 
 
 int main(){
-
+	
 	setcursor(0,0);
-	gotoxy(midx, midy);
-	cout << "safa";
+	
 	textcolor(0);
 	getche();
 	textcolor(WHITE);
