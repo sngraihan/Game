@@ -154,9 +154,9 @@ void resetenemy(int ind){
 }
 
 bool coll(int ind){
-	if(enemyposx[ind] - posbullx >=0){
-		if(enemyposy[ind] - posbully >=0){
-			return false;
+	if(enemyposx[ind] - posbullx >0){
+		if(enemyposy[ind]-posbully == 0){
+		return false;
 		}
 	}
 	return true;
@@ -262,11 +262,11 @@ void play(){
 	
 	while(true)
 	{
-		bool bulletFlag = false;
+
 		
 		if(kbhit())
 		{
-			
+					
 			char mov = getch();
 			if(mov=='w'|| mov== 'W' || mov==KEY_UP)
 			{
@@ -282,14 +282,18 @@ void play(){
 			} 			
 			else if(mov ==KEY_SPACE)
 			{
-				if(posbullx < maxx-1){
-					posbullx++;
+				for(int i=0;i<2;i++){
+		
+				bullflag[i] = true;
 				}
 			}			
 		}
 		
 		drawplayer();
-	//	drawbullet();
+		
+		for(int i=0; i<2; i++){
+			drawbullet(i);
+		}
 		
 		for (int i = 0; i < 4; i++)
 		{
@@ -298,7 +302,7 @@ void play(){
 		
 		for (int i = 0; i < 4; i++)
 		{
-			if (coll(i) == false)
+			if (coll(i) == true)
 			{
 				score++;
 				updatescr();
@@ -355,9 +359,14 @@ void play(){
 
 
 int main(){
-	
+
 	setcursor(0,0);
-	
+	gotoxy(midx, midy-1);
+	cout << "  ///";
+	gotoxy(midx, midy);
+	cout << "\xaao===>";
+	gotoxy(midx, midy+1);
+	cout << "  \\\\\\";
 	textcolor(0);
 	getche();
 	textcolor(WHITE);
