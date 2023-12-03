@@ -381,7 +381,7 @@ int main(){
 	gotoxy(midx, midy);
 	cout << "\xaao===>";
 	gotoxy(midx, midy+1);
-	cout << " alif";
+	cout << " zaky";
 	textcolor(0);
 	getche();
 	textcolor(WHITE);
