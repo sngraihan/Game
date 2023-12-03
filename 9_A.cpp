@@ -37,8 +37,9 @@ int plposx = 1;
 int enemyposy[4], enemyposx[4];
 bool enemyflag[4];//<--- kemungkinan error
 
-int posbully = midy;
-int posbullx = plposx+2;
+int posbully[2];
+int posbullx[2];
+
 bool bullflag[2];
 
 char player[2] = {'\xdb', '\xfe'};
@@ -137,7 +138,7 @@ void drawenemy(int ind){
 	if(enemyflag[ind]==true){
 		textcolor(LIGHTGREEN);
 		gotoxy(enemyposx[ind], enemyposy[ind]);
-		cout << "\xaao\\\\\\>";
+		cout << "\xaao-\\\\>";
 		textcolor(WHITE);
 	}	
 }
@@ -154,8 +155,8 @@ void resetenemy(int ind){
 }
 
 bool coll(int ind){
-	if(enemyposx[ind] - posbullx >0){
-		if(enemyposy[ind]-posbully == 0){
+	if(enemyposx[ind] - posbullx[ind] >0){
+		if(enemyposy[ind]-posbully[ind] == 0){
 		return false;
 		}
 	}
@@ -181,34 +182,34 @@ void eraseplayer(){
 void drawbullet(int ind){
 	if(bullflag[ind]==true){
 	textcolor(YELLOW);
-	gotoxy(posbullx, posbully);
+	gotoxy(posbullx[ind], posbully[ind]);
 	cout << "\xf8";
 	textcolor(WHITE);
 	}
 }
 
-void erasebullet(){
+void erasebullet(int ind){
 	
-	gotoxy(posbullx, posbully);
+	gotoxy(posbullx[ind], posbully[ind]);
 	cout << " ";
 	
 }
 
-void shoot(){
-	while(true){
-	
-	erasebullet();
-	char mov2 = getch();
-	if(mov2==KEY_SPACE){
-		if(posbullx < 90){
-			posbullx++;
-		}
-	}
+//void shoot(){
+//	while(true){
+//	
+//	erasebullet();
+//	char mov2 = getch();
+//	if(mov2==KEY_SPACE){
+//		if(posbullx < 90){
+//			posbullx++;
+//		}
+//	}
 	//drawbullet(ind);
 	
-	Sleep(50);
-	}
-}
+//	Sleep(50);
+//	}
+//}
 
 void updatescr(){
 
@@ -242,6 +243,10 @@ void gameover(){
 
 void play(){
 	score = 0;
+	posbully[0] = plposy;
+	posbully[1] = plposy;
+	posbullx[0] = plposx + 2;
+	posbullx[1] = plposx + 2;
 	enemyflag[0] = true;
 	enemyflag[1] = false;
 	enemyflag[2] = false;
@@ -271,20 +276,24 @@ void play(){
 			if(mov=='w'|| mov== 'W' || mov==KEY_UP)
 			{
 				if(plposy>2){
-					plposy++;
+					plposy--;
 				}
 			} 			
 			else if(mov=='s' || mov=='S' || mov==KEY_DOWN)
 			{
 				if(plposy<maxy){
-					plposy--;
+					plposy++;
 				}
 			} 			
-			else if(mov ==KEY_SPACE)
+			
+			
+			if(mov == KEY_SPACE)
 			{
-				for(int i=0;i<2;i++){
-		
-				bullflag[i] = true;
+				
+				if (bullflag[0] = false){
+					bullflag[0] = true;
+				} else if (bullflag[0] = true){
+					bullflag[1] = true;
 				}
 			}			
 		}
@@ -311,8 +320,10 @@ void play(){
 		
 		Sleep(30);
 		eraseplayer();
-		erasebullet();
 		
+		for (int i = 0; i < 3; i++){
+			erasebullet(i);
+		}
 		
 		
 		for (int i = 0; i < 3; i++){
@@ -342,6 +353,14 @@ void play(){
 		}
 		
 		for(int i=0; i<4; i++){
+			if(posbullx[0] < maxx || posbullx[1] < maxx){
+				if(bullflag[i]==true){
+					posbullx[i] += 1;
+				}
+			}	
+		}
+		
+		for(int i=0; i<4; i++){
 			
 			if(enemyposx[i]==0 || enemyposx[i] == plposx){
 				resetenemy(i);
@@ -366,7 +385,7 @@ int main(){
 	gotoxy(midx, midy);
 	cout << "\xaao===>";
 	gotoxy(midx, midy+1);
-	cout << "  \\\\\\";
+	cout << " zaky";
 	textcolor(0);
 	getche();
 	textcolor(WHITE);
