@@ -291,21 +291,17 @@ void play(){
 					plposy++;
 				}
 			} 			
-<<<<<<< HEAD:9_A.cpp
+
 			
 			
-			if(mov == KEY_SPACE)
-=======
-			else if(mov == KEY_SPACE)
->>>>>>> 3506f7017da803f5ca482517fe4de978e7ced17c:game4.cpp
-			{
+			if(mov == KEY_SPACE){
 				
 				if (bullflag[0] = false){
 					bullflag[0] = true;
 				} else if (bullflag[0] = true){
 					bullflag[1] = true;
 				}
-			}			
+			}		
 		}
 		
 		drawplayer();
@@ -363,17 +359,17 @@ void play(){
 		}
 		
 		for(int i=0; i<4; i++){
-<<<<<<< HEAD:9_A.cpp
+
 			if(posbullx[0] < maxx || posbullx[1] < maxx){
 				if(bullflag[i]==true){
 					posbullx[i] += 1;
 				}
 			}	
-=======
+
 			if(bullflag[i]==true){
 				enemyposx[i] += 1;
 			}
->>>>>>> 3506f7017da803f5ca482517fe4de978e7ced17c:game4.cpp
+
 		}
 		
 		for(int i=0; i<4; i++){
@@ -401,7 +397,7 @@ int main(){
 	gotoxy(midx, midy);
 	cout << "\xaao===>";
 	gotoxy(midx, midy+1);
-	cout << " zaky";
+	cout << " amala";
 	textcolor(0);
 	getche();
 	textcolor(WHITE);
