@@ -70,6 +70,12 @@ void setcursor(bool visible, DWORD size)
 	SetConsoleCursorInfo(console, &lpCursor);
 }
 
+void menu(){
+	gotoxy(midx-10,midy);
+	cout << "Pick Option: ";
+	
+}
+
 void draw(){
 	textcolor(RED);
 	for(int i=0; i<maxy; i++){
