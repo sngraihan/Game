@@ -397,7 +397,7 @@ int main(){
 	gotoxy(midx, midy);
 	cout << "\xaao===>";
 	gotoxy(midx, midy+1);
-	cout << " amalaaaaaaaa";
+	cout << " amalaaaaaaaaaaaaaaa";
 	textcolor(0);
 	getche();
 	textcolor(WHITE);
