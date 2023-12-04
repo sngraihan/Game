@@ -72,7 +72,7 @@ void setcursor(bool visible, DWORD size)
 
 void menu(){
 	gotoxy(midx-10,midy);
-	cout << "Pick Option:  ";
+	cout << "Pick Option:";
 	
 }
 
