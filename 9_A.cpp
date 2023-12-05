@@ -2,6 +2,8 @@
 #include <conio.h>
 #include <windows.h>
 
+//           cd OneDrive\Documents\dev c++\New Folder
+//              g++ -o game 9_A.cpp
 
 #define BLUE 1
 #define GREEN 2
@@ -37,10 +39,10 @@ int plposx = 1;
 int enemyposy[4], enemyposx[4];
 bool enemyflag[4];//<--- kemungkinan error
 
-int posbully[2];
-int posbullx[2];
+int posbully[4];
+int posbullx[4];
 
-bool bullflag[2];
+bool bullflag[4];
 
 char player[2] = {'\xdb', '\xfe'};
 
@@ -221,7 +223,7 @@ void updatescr(){
 
 	gotoxy(midx-3, 1);
 	cout << "Score: " << score;
-	
+	  
 }
 
 void updatelifes(){
@@ -260,7 +262,11 @@ void play(){
 	
 	bullflag[0] = false;
 	bullflag[1] = false;
+	bullflag[2] = false;
+	bullflag[3] = false;
 	enemyposx[0]=enemyposx[1]=enemyposx[2]=enemyposx[3] = 84;
+	posbullx[0]=posbullx[1]=posbullx[2]=posbullx[3] = plposx+2;
+	
 	system("cls");
 	draw();
 	updatescr();
@@ -290,17 +296,20 @@ void play(){
 				if(plposy<maxy){
 					plposy++;
 				}
-			} 			
-
-			
-			
-			if(mov == KEY_SPACE){
-				
+			} else if(mov == KEY_SPACE){
 				if (bullflag[0] = false){
 					bullflag[0] = true;
-				} else if (bullflag[0] = true){
+				} 
+				else if (bullflag[1] = false){
 					bullflag[1] = true;
 				}
+				else if (bullflag[2] = false){
+					bullflag[2] = true;
+				}
+				else if (bullflag[3] = false){
+					bullflag[3] = true;
+				}
+				
 			}		
 		}
 		
