@@ -37,7 +37,7 @@ int plposy = midy;
 int plposx = 1; 
 
 int enemyposy[4], enemyposx[4];
-bool enemyflag[4];//<--- kemungkinan error
+bool enemyflag[4];
 
 int posbully[4];
 int posbullx[4];
@@ -163,10 +163,10 @@ void resetenemy(int ind){
 }
 
 bool coll(int ind){
-	if(enemyposx[ind] - posbullx[ind] >0){
-		if(enemyposy[ind]-posbully[ind] == 0){
+	if(enemyposx[ind] == posbullx[ind] && enemyposy[ind] == posbully[ind]){
+		
 		return false;
-		}
+	
 	}
 	return true;
 }
@@ -201,6 +201,17 @@ void erasebullet(int ind){
 	gotoxy(posbullx[ind], posbully[ind]);
 	cout << " ";
 	
+}
+
+void genbullet(int ind){
+	
+	posbullx[ind] = plposx;
+	posbully[ind] = plposy;
+}
+
+void resetbullet(int ind){
+	erasebullet(ind);
+	genbullet(ind);
 }
 
 //void shoot(){
@@ -251,10 +262,6 @@ void gameover(){
 
 void play(){
 	score = 0;
-	posbully[0] = plposy;
-	posbully[1] = plposy;
-	posbullx[0] = plposx + 2;
-	posbullx[1] = plposx + 2;
 	enemyflag[0] = true;
 	enemyflag[1] = false;
 	enemyflag[2] = false;
@@ -265,7 +272,9 @@ void play(){
 	bullflag[2] = false;
 	bullflag[3] = false;
 	enemyposx[0]=enemyposx[1]=enemyposx[2]=enemyposx[3] = 84;
-	posbullx[0]=posbullx[1]=posbullx[2]=posbullx[3] = plposx+2;
+	posbullx[0]=posbullx[1]=posbullx[2]=posbullx[3] = plposx;
+	posbully[0]=posbully[1]=posbully[2]=posbully[3] = plposy;
+	
 	
 	system("cls");
 	draw();
@@ -279,8 +288,7 @@ void play(){
 	
 	while(true)
 	{
-
-		
+			
 		if(kbhit())
 		{
 					
@@ -296,17 +304,20 @@ void play(){
 				if(plposy<maxy){
 					plposy++;
 				}
-			} else if(mov == KEY_SPACE){
-				if (bullflag[0] = false){
+			} 
+			
+			
+			if(mov == KEY_SPACE){
+				if (bullflag[0] == false){
 					bullflag[0] = true;
 				} 
-				else if (bullflag[1] = false){
+				else if (bullflag[1] == false){
 					bullflag[1] = true;
 				}
-				else if (bullflag[2] = false){
+				else if (bullflag[2] == false){
 					bullflag[2] = true;
 				}
-				else if (bullflag[3] = false){
+				else if (bullflag[3] == false){
 					bullflag[3] = true;
 				}
 				
@@ -315,7 +326,7 @@ void play(){
 		
 		drawplayer();
 		
-		for(int i=0; i<2; i++){
+		for(int i=0; i<4; i++){
 			drawbullet(i);
 		}
 		
@@ -336,12 +347,12 @@ void play(){
 		Sleep(30);
 		eraseplayer();
 		
-		for (int i = 0; i < 3; i++){
+		for (int i = 0; i < 4; i++){
 			erasebullet(i);
 		}
 		
 		
-		for (int i = 0; i < 3; i++){
+		for (int i = 0; i < 4; i++){
 			eraseenemy(i);
 		}
 		
@@ -363,22 +374,24 @@ void play(){
 		
 		for(int i=0; i<4; i++){
 			if(enemyflag[i]==true){
-				enemyposx[i] -= 1;
+				enemyposx[i]--;
 			}
 		}
 		
 		for(int i=0; i<4; i++){
 
-			if(posbullx[0] < maxx || posbullx[1] < maxx){
-				if(bullflag[i]==true){
-					posbullx[i] += 1;
-				}
+			if(bullflag[i]==true && posbullx[i] < maxx-1){
+				
+					posbullx[i]++;
+					
 			}	
-
-			if(bullflag[i]==true){
-				enemyposx[i] += 1;
+		}
+		
+		for(int i=0;i<4;i++){
+			if(posbullx[i]==maxx-1){
+				resetbullet(i);
 			}
-
+			
 		}
 		
 		for(int i=0; i<4; i++){
@@ -388,12 +401,18 @@ void play(){
 				lifes--;
 				updatelifes();
 				
-				if(lifes<=0){
-					gameover();
-					return;
-				}
+//				if(lifes<=0){
+//					gameover();
+//					return;
+//				}
 			}
 		}
+		
+		if(lifes<=0){
+					gameover();
+					lifes = 3;
+					return;
+				}
 	}
 }
 
