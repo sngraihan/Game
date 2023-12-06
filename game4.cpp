@@ -2,8 +2,6 @@
 #include <conio.h>
 #include <windows.h>
 
-//           cd OneDrive\Documents\dev c++\New Folder
-//              g++ -o game 9_A.cpp
 
 #define BLUE 1
 #define GREEN 2
@@ -37,12 +35,12 @@ int plposy = midy;
 int plposx = 1; 
 
 int enemyposy[4], enemyposx[4];
-bool enemyflag[4];
+bool enemyflag[4];//<--- kemungkinan error
 
-int posbully[4];
-int posbullx[4];
+int posbully[2];
+int posbullx[2];
 
-bool bullflag[4];
+bool bullflag[2];
 
 char player[2] = {'\xdb', '\xfe'};
 
@@ -70,12 +68,6 @@ void setcursor(bool visible, DWORD size)
 	lpCursor.bVisible = visible;
 	lpCursor.dwSize = size;
 	SetConsoleCursorInfo(console, &lpCursor);
-}
-
-void menu(){
-	gotoxy(midx-10,midy);
-	cout << "Pick Option:";
-	
 }
 
 void draw(){
@@ -146,7 +138,7 @@ void drawenemy(int ind){
 	if(enemyflag[ind]==true){
 		textcolor(LIGHTGREEN);
 		gotoxy(enemyposx[ind], enemyposy[ind]);
-		cout << "\xaao-\\\\>";
+		cout << "\xaao\\\\\\>";
 		textcolor(WHITE);
 	}	
 }
@@ -163,12 +155,12 @@ void resetenemy(int ind){
 }
 
 bool coll(int ind){
-	if(enemyposx[ind] == posbullx[ind] && enemyposy[ind] == posbully[ind]){
-		
-		return true;
-	
+	if(enemyposx[ind] - posbullx[ind] >0){
+		if(enemyposy[ind]-posbully[ind] == 0){
+		return false;
+		}
 	}
-	return false;
+	return true;
 }
 
 void drawplayer(){
@@ -203,18 +195,6 @@ void erasebullet(int ind){
 	
 }
 
-void genbullet(int ind){
-	
-	posbullx[ind] = plposx;
-	posbully[ind] = plposy;
-}
-
-void resetbullet(int ind){
-	erasebullet(ind);
-	bullflag[ind] = false;
-//	genbullet(ind);
-}
-
 //void shoot(){
 //	while(true){
 //	
@@ -235,7 +215,7 @@ void updatescr(){
 
 	gotoxy(midx-3, 1);
 	cout << "Score: " << score;
-	  
+	
 }
 
 void updatelifes(){
@@ -263,6 +243,10 @@ void gameover(){
 
 void play(){
 	score = 0;
+	posbully[0] = plposy;
+	posbully[1] = plposy;
+	posbullx[0] = plposx + 2;
+	posbullx[1] = plposx + 2;
 	enemyflag[0] = true;
 	enemyflag[1] = false;
 	enemyflag[2] = false;
@@ -270,13 +254,7 @@ void play(){
 	
 	bullflag[0] = false;
 	bullflag[1] = false;
-	bullflag[2] = false;
-	bullflag[3] = false;
 	enemyposx[0]=enemyposx[1]=enemyposx[2]=enemyposx[3] = 84;
-	posbullx[0] = plposx;
-	posbully[0] = plposy;
-	
-	
 	system("cls");
 	draw();
 	updatescr();
@@ -289,13 +267,8 @@ void play(){
 	
 	while(true)
 	{
-		for (int i = 0; i<4;i++){
-			if (bullflag[i] = false){
-				posbullx[i] = plposx;
-				posbully[i] = plposy;
-			}
-		}
-			
+
+		
 		if(kbhit())
 		{
 					
@@ -311,33 +284,22 @@ void play(){
 				if(plposy<maxy){
 					plposy++;
 				}
-			}
-			
-			
-			if(mov == KEY_SPACE){
-				if (bullflag[0] == false){
+			} 			
+			else if(mov == KEY_SPACE)
+			{
+				
+				if (bullflag[0] = false){
 					bullflag[0] = true;
-				} 
-				else if (bullflag[1] == false){
+				} else if (bullflag[0] = true){
 					bullflag[1] = true;
 				}
-				else if (bullflag[2] == false){
-					bullflag[2] = true;
-				}
-				else if (bullflag[3] == false){
-					bullflag[3] = true;
-				}
-				
-			}		
+			}			
 		}
 		
 		drawplayer();
 		
-		for(int i=0; i<4; i++){
-			if (bullflag[i] = true)
-			{
+		for(int i=0; i<2; i++){
 			drawbullet(i);
-			}
 		}
 		
 		for (int i = 0; i < 4; i++)
@@ -357,12 +319,12 @@ void play(){
 		Sleep(30);
 		eraseplayer();
 		
-		for (int i = 0; i < 4; i++){
+		for (int i = 0; i < 3; i++){
 			erasebullet(i);
 		}
 		
 		
-		for (int i = 0; i < 4; i++){
+		for (int i = 0; i < 3; i++){
 			eraseenemy(i);
 		}
 		
@@ -384,24 +346,14 @@ void play(){
 		
 		for(int i=0; i<4; i++){
 			if(enemyflag[i]==true){
-				enemyposx[i]--;
+				enemyposx[i] -= 1;
 			}
 		}
 		
 		for(int i=0; i<4; i++){
-
-			if(bullflag[i]==true && posbullx[i] < maxx-1){
-				
-					posbullx[i]++;
-					
-			}	
-		}
-		
-		for(int i=0;i<4;i++){
-			if(posbullx[i]==maxx-1){
-				resetbullet(i);
+			if(bullflag[i]==true){
+				enemyposx[i] += 1;
 			}
-			
 		}
 		
 		for(int i=0; i<4; i++){
@@ -411,18 +363,12 @@ void play(){
 				lifes--;
 				updatelifes();
 				
-//				if(lifes<=0){
-//					gameover();
-//					return;
-//				}
-			}
-		}
-		
-		if(lifes<=0){
+				if(lifes<=0){
 					gameover();
-					lifes = 3;
 					return;
 				}
+			}
+		}
 	}
 }
 
@@ -435,7 +381,7 @@ int main(){
 	gotoxy(midx, midy);
 	cout << "\xaao===>";
 	gotoxy(midx, midy+1);
-	cout << " amalaaaa";
+	cout << " alif";
 	textcolor(0);
 	getche();
 	textcolor(WHITE);
