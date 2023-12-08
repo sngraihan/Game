@@ -2,6 +2,8 @@
 #include <conio.h>
 #include <windows.h>
 
+//           cd OneDrive\Documents\dev c++\New Folder
+//              g++ -o game 9_A.cpp
 
 #define BLUE 1
 #define GREEN 2
@@ -35,12 +37,12 @@ int plposy = midy;
 int plposx = 1; 
 
 int enemyposy[4], enemyposx[4];
-bool enemyflag[4];//<--- kemungkinan error
+bool enemyflag[4];
 
-int posbully[2];
-int posbullx[2];
+int posbully[4];
+int posbullx[4];
 
-bool bullflag[2];
+bool bullflag[4];
 
 char player[2] = {'\xdb', '\xfe'};
 
@@ -160,15 +162,6 @@ void resetenemy(int ind){
 	genenemy(ind);
 }
 
-bool coll(int ind){
-	if(enemyposx[ind] - posbullx[ind] >0){
-		if(enemyposy[ind]-posbully[ind] == 0){
-		return false;
-		}
-	}
-	return true;
-}
-
 void drawplayer(){
 	textcolor(LIGHTWHITE);
 	
@@ -201,6 +194,18 @@ void erasebullet(int ind){
 	
 }
 
+void genbullet(int ind){
+	
+	posbullx[ind] = plposx;
+	posbully[ind] = plposy;
+}
+
+void resetbullet(int ind){
+	erasebullet(ind);
+	bullflag[ind] = false;
+	//genbullet(ind);
+}
+
 //void shoot(){
 //	while(true){
 //	
@@ -221,7 +226,7 @@ void updatescr(){
 
 	gotoxy(midx-3, 1);
 	cout << "Score: " << score;
-	
+	  
 }
 
 void updatelifes(){
@@ -246,13 +251,23 @@ void gameover(){
 	getch();
 }
 
+bool coll(int ind){
+	for(int i=0; i<4; i++){
+	if(enemyposx[ind] - posbullx[i] >= 0 && enemyposx[ind] - posbullx[i] < 2){
+		if (enemyposy[ind] - posbully[i] >= 0 && enemyposy[ind] - posbully[i] < 2){
+			resetbullet(i);
+			resetenemy(ind);
+		return true;
+		}
+	}
+	
+	}
+	return false;
+}
+
 
 void play(){
 	score = 0;
-	posbully[0] = plposy;
-	posbully[1] = plposy;
-	posbullx[0] = plposx + 2;
-	posbullx[1] = plposx + 2;
 	enemyflag[0] = true;
 	enemyflag[1] = false;
 	enemyflag[2] = false;
@@ -260,7 +275,13 @@ void play(){
 	
 	bullflag[0] = false;
 	bullflag[1] = false;
+	bullflag[2] = false;
+	bullflag[3] = false;
 	enemyposx[0]=enemyposx[1]=enemyposx[2]=enemyposx[3] = 84;
+	posbullx[0]=posbullx[1]=posbullx[2]=posbullx[3] = plposx;
+	posbully[0]=posbully[1]=posbully[2]=posbully[3] = plposy;
+	
+	
 	system("cls");
 	draw();
 	updatescr();
@@ -269,12 +290,11 @@ void play(){
 	genenemy(1);
 	genenemy(2);
 	genenemy(3);
-	lifes = 3;
+	lifes = 50;
 	
 	while(true)
 	{
-
-		
+			
 		if(kbhit())
 		{
 					
@@ -290,23 +310,23 @@ void play(){
 				if(plposy<maxy){
 					plposy++;
 				}
-			} 			
-
-			
-			
-			if(mov == KEY_SPACE){
+			} else if(mov == KEY_SPACE){
+				for (int i = 0; i < 4; i++){
+               		if (bullflag[i] == false){
+                    	bullflag[i] = true;
+                    	// Update posbullx based on the current player position
+                    	posbullx[i] = plposx;
+                    	posbully[i] = plposy;
+                    	break; // Exit the loop after updating one bullet
+                	}
+            	}
 				
-				if (bullflag[0] = false){
-					bullflag[0] = true;
-				} else if (bullflag[0] = true){
-					bullflag[1] = true;
-				}
 			}		
 		}
 		
 		drawplayer();
 		
-		for(int i=0; i<2; i++){
+		for(int i=0; i<4; i++){
 			drawbullet(i);
 		}
 		
@@ -315,36 +335,35 @@ void play(){
 			drawenemy(i);
 		}
 		
-		for (int i = 0; i < 4; i++)
-		{
-			if (coll(i) == true)
-			{
-				score++;
-				updatescr();
-			}
+		for (int i = 0; i < 4; i++){
+				if (coll(i) == true)
+				{
+					score++;
+					updatescr();
+				}
 		}
 		
 		Sleep(30);
 		eraseplayer();
 		
-		for (int i = 0; i < 3; i++){
+		for (int i = 0; i < 4; i++){
 			erasebullet(i);
 		}
 		
 		
-		for (int i = 0; i < 3; i++){
+		for (int i = 0; i < 4; i++){
 			eraseenemy(i);
 		}
 		
 		
 		
-		if(enemyposx[0]==50){
+		if(enemyposx[0]==30){
 			if(enemyflag[1]==false){
 				enemyflag[1]= true;
 			}
 		}
 		
-		if(enemyposx[1]==50){
+		if(enemyposx[1]==30){
 			if(enemyflag[2]==false){
 				enemyflag[2]= true;
 			}
@@ -354,22 +373,24 @@ void play(){
 		
 		for(int i=0; i<4; i++){
 			if(enemyflag[i]==true){
-				enemyposx[i] -= 1;
+				enemyposx[i]--;
 			}
 		}
 		
 		for(int i=0; i<4; i++){
 
-			if(posbullx[0] < maxx || posbullx[1] < maxx){
-				if(bullflag[i]==true){
-					posbullx[i] += 1;
-				}
+			if(bullflag[i]==true && posbullx[i] < maxx-1){
+				
+					posbullx[i]++;
+					
 			}	
-
-			if(bullflag[i]==true){
-				enemyposx[i] += 1;
+		}
+		
+		for(int i=0;i<4;i++){
+			if(posbullx[i]==maxx-1){
+				resetbullet(i);
 			}
-
+			
 		}
 		
 		for(int i=0; i<4; i++){
@@ -379,11 +400,17 @@ void play(){
 				lifes--;
 				updatelifes();
 				
-				if(lifes<=0){
-					gameover();
-					return;
-				}
+//				if(lifes<=0){
+//					gameover();
+//					return;
+//				}
 			}
+		}
+		
+		if(lifes<=0){
+					gameover();
+					lifes = 3;
+					return;
 		}
 	}
 }
@@ -411,4 +438,4 @@ int main(){
 	
 	
 	return 0;
-}
+} 
