@@ -47,7 +47,7 @@ bool bullflag[4];
 char player[2] = {'\xdb', '\xfe'};
 
 int score=0;
-int lifes=3;
+int lifes=5;
 
 void gotoxy( short x, short y )
 {
@@ -72,11 +72,37 @@ void setcursor(bool visible, DWORD size)
 	SetConsoleCursorInfo(console, &lpCursor);
 }
 
-void menu(){
-	gotoxy(midx-10,midy);
-	cout << "Pick Option:";
-	
+//void menu(){
+//	gotoxy(midx-10,midy);
+//	cout << "Pick Option:";
+//	
+//}
+void instructions(){
+	system("cls");
+	textcolor(BLUE);
+	gotoxy(midx-10, midy-5);
+	cout << "objective:";
+	gotoxy(midx-10, midy-4);
+	textcolor(RED);
+	cout << "- KILL ALL BIRDS!";
+	gotoxy(midx-10, midy-3);
+	cout << "- DONT LET BIRDS GET THROUGH!";
+	textcolor(BLUE);
+	gotoxy(midx-10, midy-2);
+	cout << "movement:";
+	gotoxy(midx-10, midy-1);
+	cout << "W = up";
+	gotoxy(midx-10, midy);
+	cout << "S = down";
+	gotoxy(midx-10, midy+1);
+	cout << "SPACE = Shoot";
+	textcolor(YELLOW);
+	gotoxy(midx-10, midy+4);
+	cout << "Press any key to go back to menu";
+	textcolor(WHITE);
+	getche();
 }
+
 
 void draw(){
 	textcolor(RED);
@@ -118,7 +144,7 @@ void draw(){
 	gotoxy(100, 12);
 	cout << "S = down";
 	gotoxy(100, 13);
-	cout << "D = Shoot";
+	cout << "SPACE = Shoot";
 	
 	textcolor(GREEN);
 	gotoxy(midx-10, midy);
@@ -146,7 +172,7 @@ void drawenemy(int ind){
 	if(enemyflag[ind]==true){
 		textcolor(LIGHTGREEN);
 		gotoxy(enemyposx[ind], enemyposy[ind]);
-		cout << "\xaao-\\\\>";
+		cout << "\xaao\\\\\\>";
 		textcolor(WHITE);
 	}	
 }
@@ -243,9 +269,13 @@ void eraselifes(){
 void gameover(){
 	system("cls");
 	textcolor(RED);
-	gotoxy(midx-10, midy);
+	gotoxy(midx-5, midy);
 	cout << "GAME OVER";
-	gotoxy(midx-10, midy+1);
+	gotoxy(midx-5, midy+1);
+	cout << "Highest score:" << score;
+
+	textcolor(YELLOW);
+	gotoxy(midx-5, midy+3);
 	cout << "Press any key to go back to menu";
 	textcolor(WHITE);
 	getch();
@@ -260,13 +290,13 @@ bool coll(int ind){
 		return true;
 		}
 	}
-	
+
 	}
 	return false;
 }
 
 
-void play(){
+void playeasy(){
 	score = 0;
 	enemyflag[0] = true;
 	enemyflag[1] = false;
@@ -277,8 +307,10 @@ void play(){
 	bullflag[1] = false;
 	bullflag[2] = false;
 	bullflag[3] = false;
+
+
 	enemyposx[0]=enemyposx[1]=enemyposx[2]=enemyposx[3] = 84;
-	posbullx[0]=posbullx[1]=posbullx[2]=posbullx[3] = plposx;
+	posbullx[0]=posbullx[1]=posbullx[2]=posbullx[3]= plposx;
 	posbully[0]=posbully[1]=posbully[2]=posbully[3] = plposy;
 	
 	
@@ -290,7 +322,7 @@ void play(){
 	genenemy(1);
 	genenemy(2);
 	genenemy(3);
-	lifes = 50;
+	lifes = 5;
 	
 	while(true)
 	{
@@ -301,23 +333,22 @@ void play(){
 			char mov = getch();
 			if(mov=='w'|| mov== 'W' || mov==KEY_UP)
 			{
-				if(plposy>2){
+				if(plposy>3){
 					plposy--;
 				}
 			} 			
 			else if(mov=='s' || mov=='S' || mov==KEY_DOWN)
 			{
-				if(plposy<maxy){
+				if(plposy<maxy-1){
 					plposy++;
 				}
 			} else if(mov == KEY_SPACE){
 				for (int i = 0; i < 4; i++){
                		if (bullflag[i] == false){
                     	bullflag[i] = true;
-                    	// Update posbullx based on the current player position
                     	posbullx[i] = plposx;
                     	posbully[i] = plposy;
-                    	break; // Exit the loop after updating one bullet
+                    	break; 
                 	}
             	}
 				
@@ -343,7 +374,7 @@ void play(){
 				}
 		}
 		
-		Sleep(30);
+		Sleep(50);
 		eraseplayer();
 		
 		for (int i = 0; i < 4; i++){
@@ -399,43 +430,258 @@ void play(){
 				resetenemy(i);
 				lifes--;
 				updatelifes();
-				
-//				if(lifes<=0){
-//					gameover();
-//					return;
-//				}
 			}
 		}
 		
 		if(lifes<=0){
 					gameover();
-					lifes = 3;
+					lifes = 5;
 					return;
 		}
 	}
 }
 
 
+
+void playmedium(){
+	score = 0;
+	enemyflag[0] = true;
+	enemyflag[1] = false;
+	enemyflag[2] = false;
+	enemyflag[3] = false;
+	
+	bullflag[0] = false;
+	bullflag[1] = false;
+	bullflag[2] = false;
+	bullflag[3] = false;
+
+
+	enemyposx[0]=enemyposx[1]=enemyposx[2]=enemyposx[3] = 84;
+	posbullx[0]=posbullx[1]=posbullx[2]=posbullx[3]= plposx;
+	posbully[0]=posbully[1]=posbully[2]=posbully[3] = plposy;
+	
+	
+	system("cls");
+	draw();
+	updatescr();
+	updatelifes();
+	genenemy(0);
+	genenemy(1);
+	genenemy(2);
+	genenemy(3);
+	lifes = 5;
+	
+	while(true)
+	{
+			
+		if(kbhit())
+		{
+					
+			char mov = getch();
+			if(mov=='w'|| mov== 'W' || mov==KEY_UP)
+			{
+				if(plposy>3){
+					plposy--;
+				}
+			} 			
+			else if(mov=='s' || mov=='S' || mov==KEY_DOWN)
+			{
+				if(plposy<maxy-1){
+					plposy++;
+				}
+			} else if(mov == KEY_SPACE){
+				for (int i = 0; i < 4; i++){
+               		if (bullflag[i] == false){
+                    	bullflag[i] = true;
+                    	posbullx[i] = plposx;
+                    	posbully[i] = plposy;
+                    	break; 
+                	}
+            	}
+				
+			}		
+		}
+		
+		drawplayer();
+		
+		for(int i=0; i<4; i++){
+			drawbullet(i);
+		}
+		
+		for (int i = 0; i < 4; i++)
+		{
+			drawenemy(i);
+		}
+		
+		for (int i = 0; i < 4; i++){
+				if (coll(i) == true)
+				{
+					score++;
+					updatescr();
+				}
+		}
+		
+		Sleep(40);
+		eraseplayer();
+		
+		for (int i = 0; i < 4; i++){
+			erasebullet(i);
+		}
+		
+		
+		for (int i = 0; i < 4; i++){
+			eraseenemy(i);
+		}
+		
+		
+		
+		if(enemyposx[0]==30){
+			if(enemyflag[1]==false){
+				enemyflag[1]= true;
+			}
+		}
+		
+		if(enemyposx[1]==30){
+			if(enemyflag[2]==false){
+				enemyflag[2]= true;
+			}
+		}
+		
+		if(enemyposx[2]==30){
+			if(enemyflag[3]==false){
+				enemyflag[3]= true;
+			}
+		}
+		
+		
+		for(int i=0; i<4; i++){
+			if(enemyflag[i]==true){
+				enemyposx[i]--;
+			}
+		}
+		
+		for(int i=0; i<4; i++){
+
+			if(bullflag[i]==true && posbullx[i] < maxx-1){
+				
+					posbullx[i]++;
+					
+			}	
+		}
+		
+		for(int i=0;i<4;i++){
+			if(posbullx[i]==maxx-1){
+				resetbullet(i);
+			}
+			
+		}
+		
+		for(int i=0; i<4; i++){
+			
+			if(enemyposx[i]==0 || enemyposx[i] == plposx){
+				resetenemy(i);
+				lifes--;
+				updatelifes();
+			}
+		}
+		
+		if(lifes<=0){
+					gameover();
+					lifes = 5;
+					return;
+		}
+	}
+}
+
+
+
+void playhard(){
+
+}
+
+void select(){
+	system("cls");
+	textcolor(PINK);
+	gotoxy(midx-10,midy-7);
+	cout << "1. easy";
+	gotoxy(midx-10,midy-6);
+	cout << "2. medium";
+	gotoxy(midx-10,midy-5);
+	cout << "3. hard";
+	gotoxy(midx-10,midy-4);
+	cout << "4. impossible";
+	gotoxy(midx-10,midy-3);
+	cout << "5. back to menu";
+	gotoxy(midx-10,midy-1);	
+	cout << "select game difficulty: ";
+	textcolor(WHITE);
+	char op2 = getche();
+		
+		if (op2 == '1')
+			playeasy();
+		else if (op2 == '2')
+			playmedium();
+		else if (op2 == '3')
+			playhard();
+		else if (op2 == '5')
+			return;
+	
+}
+
 int main(){
 
-	setcursor(0,0);
-	gotoxy(midx, midy-1);
-	cout << "  ///";
-	gotoxy(midx, midy);
-	cout << "\xaao===>";
-	gotoxy(midx, midy+1);
-	cout << " amalaaaa";
-	textcolor(0);
-	getche();
-	textcolor(WHITE);
+//	setcursor(0,0);
+//	gotoxy(midx, midy-1);
+//	cout << "  ///";
+//	gotoxy(midx, midy);
+//	cout << "\xaao===>";
+//	gotoxy(midx, midy+1);
+//	cout << " amalaaaa";
+//	textcolor(0);
+//	getche();
+//	textcolor(WHITE);
 	
 	do{
 		system("cls");
+		textcolor(YELLOW);
+		for(int i=midx-10; i<midx+14; i++){
+		gotoxy(i, midy-10);
+		cout << "\xcd";
+		}
+		gotoxy(midx-10, midy-9);
+		cout << "\xba      BIRD ATTACK     \xba";
+		gotoxy(midx-10, midy-8);
+		cout << "\xba                      \xba";
+		for(int i=midx-10; i<midx+14; i++){
+		gotoxy(i, midy-7);
+		cout << "\xcd";
+		}
+		textcolor(LIGHTGREEN);
+		gotoxy(midx-1, midy-8);
+		cout << "\xaao\\\\\\>";
+		textcolor(YELLOW);
+		gotoxy(midx-10, midy-5);
+		cout << "1. Start Game";
+		gotoxy(midx-10, midy-4);
+		cout << "2. Instructions";
+		gotoxy(midx-10, midy-3);
+		cout << "3. Quit";
+		gotoxy(midx-10, midy-2);
+		cout << "Select option: ";
+
+		textcolor(WHITE);
+		char op = getche();
 		
-		play();
+		if (op == '1')
+			select();
+		else if (op == '2')
+			instructions();
+		else if (op == '3')
+			exit(0);
+		
 				
 	} while(true);
 	
 	
 	return 0;
-} 
+}
